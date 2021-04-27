@@ -1,0 +1,44 @@
+<?php
+include_once __DIR__ . '/../../../../vendor/autoload.php';
+use Lop\Api\LopDomainClient;
+use Lop\Api\Request\LCP_00065267\PickupReceiveApiReceivePickUpOrderLopRequest;
+use Lop\Api\Domain\LCP_00065267\PickupReceiveApi\PickUpOrderRequest;
+use Lop\Api\Domain\LCP_00065267\PickupReceiveApi\ProductDetailDTO;
+use Lop\Api\Plugin\Factory\HmacPluginFactory;
+use Lop\Api\Plugin\Factory\OAuth2PluginFactory;
+use Lop\Api\Plugin\DomainHttpParam;
+//测试demo
+$client = new LopDomainClient("SERVER_URL");
+$request = new PickupReceiveApiReceivePickUpOrderLopRequest();
+            $pickUpOrderRequest = new PickUpOrderRequest();
+                                $pickUpOrderRequest->setPickupAddress("北京亦庄经济技术开发区科创十一街京东总部");
+                                            $pickUpOrderRequest->setPickupName("李思");
+                                            $pickUpOrderRequest->setPickupTel("18511111111");
+                                            $pickUpOrderRequest->setCustomerTel("18511111111");
+                                            $pickUpOrderRequest->setCustomerCode("010K685111");
+                                            $pickUpOrderRequest->setBackAddress("北京亦庄经济技术开发区科创十一街京东总部");
+                                            $pickUpOrderRequest->setCustomerContract("张三");
+                                            $pickUpOrderRequest->setDesp("带纸箱");
+                                            $pickUpOrderRequest->setOrderId("123456");
+                                            $pickUpOrderRequest->setWeight(1);
+                                            $pickUpOrderRequest->setRemark("test");
+                                            $pickUpOrderRequest->setVolume(2);
+                                            $pickUpOrderRequest->setIsGuaranteeValue(true);
+                                            $pickUpOrderRequest->setGuaranteeValueAmount(1000);
+                                                                $pickUpOrderRequest->setValueAddService("test");
+                                            $pickUpOrderRequest->setUserPin("test");
+                                            $pickUpOrderRequest->setPickupStartTime(date_create());
+                                            $pickUpOrderRequest->setPickupEndTime(date_create());
+                                            $pickUpOrderRequest->setPromiseTimeType(0);
+                                            $pickUpOrderRequest->setGuaranteeSettleType(0);
+                                            $pickUpOrderRequest->setPackingSettleType(0);
+                                            $pickUpOrderRequest->setFreightSettleType(0);
+                                            $pickUpOrderRequest->setAllowedRepeatOrderType(0);
+                            $request->setPickUpOrderRequest($pickUpOrderRequest);
+                $lopOauthPlugin = OAuth2PluginFactory::produceLopPlugin($client->getServerUrl(),"appKey", "appSecret", "refreshToken");
+        $request->addLopPlugin($lopOauthPlugin);
+    //参数校验
+$request->check();
+$resp = $client->execute($request);
+echo json_encode($resp,JSON_UNESCAPED_UNICODE);
+echo PHP_EOL;
